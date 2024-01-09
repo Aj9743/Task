@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering Registration</title>
+    <style>body {
+        font-family: Arial, sans-serif;
+       
+        margin: 0;
+        padding: 0;
+        color: #fff;
+        background-image: url(./signback.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+    
+    .registration-form {
+        background-color: #000;
+        border-radius: 10px;
+        box-shadow: 0px 0px 20px rgba(94, 130, 29, 0.5);
+        text-align: center;
+        padding: 30px;
+        width: 600px;
+    }
+    
+    .registration-form h1 {
+        font-size: 36px;
+        color: #FF7200;
+        margin: 0px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+    }
+    
+    .registration-form p {
+        font-size: 18px;
+        color: #ccc;
+        margin: 15px 0;
+    }
+    
+    .input-group {
+        text-align: left;
+        margin: 20px 0;
+    }
+    
+    .input-group label {
+        display: block;
+        font-size: 16px;
+        color: #f3efed;
+        text-align: left;
+        margin-bottom: 10px;
+    }
+    
+    .input-group input[type="text"],
+    .input-group input[type="email"],
+    .input-group input[type="tel"],
+    .input-group input[type="password"] {
+        width: 100%;
+        padding: 15px;
+        margin: 10px -5px;
+        border: none;
+        border-bottom: 2px solid #FF7200;
+        font-size: 18px;
+        color: #fff;
+        background-color: transparent;
+        transition: border-color 0.3s;
+    }
+    
+    .input-group input[type="text"]:focus,
+    .input-group input[type="email"]:focus,
+    .input-group input[type="tel"]:focus,
+    .input-group input[type="password"]:focus {
+        border-color: #ef700e;
+    }
+    
+    .input-group input[type="checkbox"] {
+        margin-right: 5px;
+    }
+    
+    button {
+        background-color: #FF7200;
+        color: #fff;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        text-transform: uppercase;
+        transition: background-color 0.3s;
+    }
+    
+    button:hover {
+        background-color: #000;
+    }
+    
+    .registration-form a {
+        text-decoration: none;
+        color: #FF7200;
+        font-weight: 600;
+        font-size: 16px;
+        transition: color 0.3s;
+    }
+    
+    .registration-form a:hover {
+        color: #000;
+    }
+     </style>
+</head>
+
+<body>
+    
+    <div class="container">
+        <form class="registration-form">
+            <h1>Welcome to Sizzling Burger Deals</h1>
+            <p>Create Your Account</p>
+
+            <div class="input-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+
+            <div class="input-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="input-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="input-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="input-group">
+                <label for="street">Street Address:</label>
+                <input type="text" id="street" name="street" required>
+            </div>
+
+            <div class="input-group">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" required>
+            </div>
+
+            <div class="input-group">
+                <label for="state">State/Province:</label>
+                <input type="text" id="state" name="state" required>
+            </div>
+
+            <div class="input-group">
+                <label for="zip">ZIP/Postal Code:</label>
+                <input type="text" id="zip" name="zip" required>
+            </div>
+
+            <div class="input-group">
+                <label for="country">Country:</label>
+                <input type="text" id="country" name="country" required>
+            </div>
+
+            <div class="input-group">
+                <input type="checkbox" id="newsletter" name="newsletter" value="yes">
+                <label for="newsletter">Yes, I want to receive newsletters.</label>
+            </div>
+
+            <div class="input-group">
+                <input type="checkbox" id="agree" name="agree" required>
+                <label for="agree">By creating an account, you agree to our Terms and Conditions and Privacy Policy.</label>
+            </div>
+
+            <button type="submit">Create Account</button>
+
+            <p>Already have an account? <a href="./home.html">Login here</a></p>
+        </form>
+    </div>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('.registration-form');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            if (validateForm()) {
+                storeUserData();
+                alert('Account created successfully!');
+            }
+        });
+
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const street = document.getElementById('street').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim();
+            const zip = document.getElementById('zip').value.trim();
+            const country = document.getElementById('country').value.trim();
+
+            if (!firstName || !lastName || !email || !phone || !username || !password ||
+                !street || !city || !state || !zip || !country) {
+                alert('All fields are required.');
+                return false;
+            }
+
+            // You can add more specific validation for each field if needed.
+
+            return true;
+        }
+
+        function storeUserData() {
+            const userData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                username: document.getElementById('username').value.trim(),
+                password: document.getElementById('password').value.trim(),
+                street: document.getElementById('street').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                state: document.getElementById('state').value.trim(),
+                zip: document.getElementById('zip').value.trim(),
+                country: document.getElementById('country').value.trim(),
+                newsletter: document.getElementById('newsletter').checked,
+                agree: document.getElementById('agree').checked
+            };
+
+            // Convert the object to a JSON string and store it in local storage
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+    });
+</script>
+</html>

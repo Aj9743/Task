@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delicious Burgers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #ff7200;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #070707;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 60px;
+            font-style: italic;
+            color: #ff7200;
+        }
+
+        .cart-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .cart-icon img {
+            width: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #222;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .menu-item {
+            position: relative;
+            margin: 10px;
+            background-color: #333;
+            border: 1px solid #ff7200;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .menu-item img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .cus {
+            margin-top: 10px;
+        }
+
+        .cus button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+
+        .cart-container {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            width: 100%;
+            display: none;
+            z-index: 1000;
+            border-radius: 5px;
+        }
+
+        .cart-header {
+            background-color: #ff7200;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .cart-items {
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .cart-total {
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .cart-empty {
+            padding: 20px;
+            text-align: center;
+            color: #777;
+        }
+
+        .remove-item {
+            color: red;
+            cursor: pointer;
+        }
+
+        .order-now-btn {
+            background-color: #ff7200;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        #payment-page {
+            display: none;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #222;
+            box-shadow: 0 0 10px rgba(172, 144, 144, 0.5);
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #payment-message {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #222;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #ff7200;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .close {
+            color: #ff7200;
+            float: right;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #fff;
+        }
+    </style>
+    <!-- Include the QR code library -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Sizzling Burger Deals</h1>
+        <div class="cart-icon" onclick="toggleCart()">
+            <img src="https://cdn.pixabay.com/photo/2016/10/10/14/46/icon-1728552_1280.jpg" alt="Cart">
+        </div>
+    </header>
+    <div id="customize-tooltip" class="tooltip">
+        <h3>Customize your Burger</h3>
+        <div id="customization-options">
+            <!-- Customize options will be dynamically added here -->
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Our Menu</h2>
+        <div class="menu">
+            <div class="menu-item">
+                <img src="https://s23209.pcdn.co/wp-content/uploads/2022/07/220602_DD_The-Best-Ever-Cheeseburger_267-500x500.jpg"
+                    alt="Cheese Burger">
+                <h3>Cheese Burger</h3>
+                <p>Price: ₹300</p>
+                <div class="cus">
+                    <button onclick="addToCart('Cheese Burger', 300)">Add to Cart</button>
+                    <button onclick="customizeBurger('Cheese Burger', 300)">Customize</button>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="https://www.vegrecipesofindia.com/wp-content/uploads/2020/12/burger-recipe-4.jpg"
+                    alt="Veggie Burger">
+                <h3>Veggie Burger</h3>
+                <p>Price: ₹350</p>
+                <div class="cus">
+                    <button onclick="addToCart('Veggie Burger', 350)">Add to Cart</button>
+                    <button onclick="customizeBurger('Veggie Burger', 350)">Customize</button>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="https://natashaskitchen.com/wp-content/uploads/2020/06/Chicken-Sandwich-7.jpg"
+                    alt="Chicken Burger">
+                <h3>Chicken Burger</h3>
+                <p>Price: ₹250</p>
+                <div class="cus">
+                    <button onclick="addToCart('Chicken Burger', 250)">Add to Cart</button>
+                    <button onclick="customizeBurger('Chicken Burger', 250)">Customize</button>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7DlMgj-APCF5zuqIYYvUBZLKk74XLai-eJuZg-fUW6g&s"
+                    alt="Mushroom Burger">
+                <h3>Mushroom Burger</h3>
+                <p>Price: ₹180</p>
+                <div class="cus">
+                    <button onclick="addToCart('Mushroom Burger', 180)">Add to Cart</button>
+                    <button onclick="customizeBurger('Mushroom Burger', 180)">Customize</button>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="https://b.zmtcdn.com/data/pictures/chains/1/19733081/c29b03fda54d263bfdd4604dc0913469.jpg"
+                    alt="Gourmet Burger">
+                <h3>Gourmet Burger</h3>
+                <p>Price: ₹380</p>
+                <div class="cus">
+                    <button onclick="addToCart('Gourmet Burger', 380)">Add to Cart</button>
+                    <button onclick="customizeBurger('Gourmet Burger', 380)">Customize</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-container" class="cart-container">
+        <div class="cart-header">Your Cart</div>
+        <div id="cart-items" class="cart-items">
+            <!-- Cart items will be dynamically added here -->
+        </div>
+        <button class="order-now-btn" onclick="orderNow()">Order Now</button>
+        <div class="cart-total">Total: ₹0.00</div>
+        <div class="cart-empty" id="cart-empty">Your cart is empty.</div>
+    </div>
+
+    <div id="payment-page">
+        <h2>Payment Page</h2>
+        <p>Total Amount: ₹0.00</p>
+        <div id="qrcode"></div>
+        <p id="payment-message">Scan the QR code and pay using any UPI app.</p>
+        <button onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        const menuData = [
+            { name: 'Cheese Burger', price: 300 },
+            { name: 'Veggie Burger', price: 350 },
+            { name: 'Chicken Burger', price: 250 },
+            { name: 'Mushroom Burger', price: 180 },
+            { name: 'Gourmet Burger', price: 380 }
+        ];
+
+        const menuContainer = document.querySelector('.menu');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartEmptyMessage = document.getElementById('cart-empty');
+        const cartTotal = document.querySelector('.cart-total');
+        const paymentPage = document.getElementById('payment-page');
+        const customizeTooltip = document.getElementById('customize-tooltip');
+        const customizationOptions = document.getElementById('customization-options');
+
+        const cartItemsArray = [];
+
+        function toggleCart() {
+            const cartContainer = document.getElementById('cart-container');
+            cartContainer.style.display = (cartContainer.style.display === 'none' || cartContainer.style.display === '') ? 'block' : 'none';
+        }
+
+        function addToCart(burgerName, price, options) {
+            const cartItem = document.createElement('div');
+            cartItem.classList.add('cart-item');
+            cartItem.innerHTML = `
+                <span>${burgerName} - ₹${price}</span>
+                <span class="remove-item" onclick="removeFromCart(this)">X</span>
+            `;
+            cartItemsContainer.appendChild(cartItem);
+
+            cartItemsArray.push({ name: burgerName, price: price, options: options });
+
+            if (cartItemsContainer.children.length === 1) {
+                cartEmptyMessage.style.display = 'none';
+            }
+            const total = calculateTotal();
+            cartTotal.textContent = `Total: ₹${total.toFixed(2)}`;
+        }
+
+        function calculateTotal() {
+            let total = 0;
+
+            cartItemsArray.forEach(item => {
+                total += item.price;
+            });
+
+            return total;
+        }
+
+        function orderNow() {
+            const total = calculateTotal();
+            if (total > 0) {
+                document.getElementById('cart-container').style.display = 'none';
+                document.getElementById('payment-page').style.display = 'block';
+                paymentPage.querySelector('p').textContent = `Total Amount: ₹${total.toFixed(2)}`;
+
+                generateQRCode(total.toFixed(2));
+            } else {
+                alert('Add items to the cart before placing an order.');
+            }
+        }
+
+        function removeFromCart(element) {
+            const index = Array.from(element.parentNode.parentNode.children).indexOf(element.parentNode);
+            removeFromCartArray(index);
+
+            element.parentNode.remove();
+
+            const total = calculateTotal();
+            cartTotal.textContent = `Total: ₹${total.toFixed(2)}`;
+
+            if (cartItemsContainer.children.length === 0) {
+                cartEmptyMessage.style.display = 'block';
+            }
+        }
+
+        function removeFromCartArray(index) {
+            cartItemsArray.splice(index, 1);
+        }
+
+        function generateQRCode(amount) {
+            document.getElementById("qrcode").innerHTML = "";
+
+            const qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: `upi://pay?pa=your-upi-id@domain&pn=Your%20Name&mc=YourMerchantCode&tid=YourTransactionId&tr=YourOrderId&tn=Payment%20for%20Burgers&am=${amount}&cu=INR`,
+                width: 128,
+                height: 128
+            });
+        }
+
+        function goBack() {
+            document.getElementById('cart-container').style.display = 'block';
+            document.getElementById('payment-page').style.display = 'none';
+        }
+
+        function customizeBurger(burgerName, price) {
+            currentCustomizationBurger = burgerName;
+            const options = getCustomizationOptions(burgerName);
+            populateCustomizationOptions(options);
+
+            const submitButton = document.createElement('button');
+            submitButton.textContent = 'Submit';
+            submitButton.addEventListener('click', addToCartCustom);
+            customizationOptions.appendChild(submitButton);
+
+            submitButton.dataset.price = price;
+        }
+
+        function getCustomizationOptions(burgerName) {
+            const burgerOptions = {
+                'Cheese Burger': [
+                    { name: 'Extra Cheese', price: 20 },
+                    { name: 'Extra Bacon', price: 30 }
+                ],
+                'Veggie Burger': [
+                    { name: 'Extra Vegetables', price: 20 },
+                    { name: 'Extra Sauces', price: 30 }
+                ],
+                'Chicken Burger': [
+                    { name: 'Extra Chicken patty', price: 20 },
+                    { name: 'Extra Cheese', price: 30 }
+                ],
+                'Mushroom Burger': [
+                    { name: 'Extra Mushroom Patty', price: 20 },
+                    { name: 'Extra Tomato', price: 30 }
+                ],
+                'Gourmet Burger': [
+                    { name: 'Extra Cheese', price: 20 },
+                    { name: 'Extra Sauces', price: 30 }
+                ]
+            };
+
+            return burgerOptions[burgerName] || [];
+        }
+
+        function populateCustomizationOptions(options) {
+            customizationOptions.innerHTML = '';
+
+            options.forEach(option => {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'customization-option';
+                checkbox.value = option.name;
+                checkbox.dataset.price = option.price;
+                checkbox.addEventListener('change', updateTotal);
+
+                const label = document.createElement('label');
+                label.innerHTML = `${option.name} (+₹${option.price.toFixed(2)})`;
+
+                customizationOptions.appendChild(checkbox);
+                customizationOptions.appendChild(label);
+                customizationOptions.appendChild(document.createElement('br'));
+            });
+        }
+
+        function updateTotal() {
+            const total = calculateCustomizationTotal();
+            customizationOptions.querySelector('button').dataset.total = total;
+        }
+
+        function calculateCustomizationTotal() {
+            const checkboxes = document.querySelectorAll('input[name="customization-option"]:checked');
+            let total = 0;
+
+            checkboxes.forEach(checkbox => {
+                total += parseFloat(checkbox.dataset.price);
+            });
+
+            return total;
+        }
+
+        function addToCartCustom() {
+            const selectedOptions = getSelectedCustomizationOptions();
+            const total = parseFloat(customizationOptions.querySelector('button').dataset.total);
+
+            addToCart(currentCustomizationBurger, total, selectedOptions);
+
+            customizeTooltip.style.display = 'none';
+        }
+
+        function getSelectedCustomizationOptions() {
+            const checkboxes = document.querySelectorAll('input[name="customization-option"]:checked');
+            const selectedOptions = [];
+
+            checkboxes.forEach(checkbox => {
+                selectedOptions.push({ name: checkbox.value, price: parseFloat(checkbox.dataset.price) });
+            });
+
+            return selectedOptions;
+        }
+
+        const customizeButtons = document.querySelectorAll('.cus button:nth-child(2)');
+
+        customizeButtons.forEach((button, index) => {
+            button.addEventListener('click', function () {
+                const burgerName = menuData[index].name;
+                const price = menuData[index].price;
+                customizeBurger(burgerName, price);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
