@@ -1,0 +1,9 @@
+1700210030139	Rename package 'Springcontroller'
+1700210063670	Rename package 'Springdto'
+1700210076503	Rename package 'Springdao'
+1700210092517	Rename package 'Springmvc_dao'
+1700210101359	Rename package 'Springmvc_dto'
+1700210227247	Rename package 'Springmvc1_controller'
+1700210236753	Rename package 'Springmvc1_dao'
+1700210248442	Rename package 'Springmvc1_dto'
+1700304958638	Infer generic type arguments

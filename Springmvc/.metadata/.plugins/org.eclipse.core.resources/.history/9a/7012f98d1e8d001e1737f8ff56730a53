@@ -1,0 +1,43 @@
+package com.ai.ai.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ai.ai.dto.Student;
+import com.ai.ai.studentdao.student_dao;
+
+@RestController
+@RequestMapping("/students")
+public class Student_controller {
+	@Autowired
+	student_dao dao;
+
+	@PostMapping("/create")
+	public List<Student> insert(@RequestBody List<Student> s) {
+		return  dao.save(s);
+	}
+
+@GetMapping("/get")
+
+	public List<Student> fetch( List<Student> s) {
+	return dao.fetch(s);
+
+	}
+
+	@PostMapping("/update")
+	public void update() {
+
+	}
+
+	@PostMapping("/delete")
+	public void delete() {
+
+	}
+}
